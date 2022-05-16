@@ -1,4 +1,4 @@
-"use strict"
+"use strict";
 
 const express = require("express");
 const apicache = require("apicache");
@@ -43,7 +43,7 @@ const cache = apicache.middleware;
  *                                      $ref: "#/components/schemas/workout"
  *          5XX:
  *              description: FAILED
- *              content: 
+ *              content:
  *                  application/json:
  *                      schema:
  *                          type: object
