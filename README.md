@@ -1,2 +1,4 @@
-# crossfit_wod_api
+# fitness-api
 Restful api, in progress
+
+
