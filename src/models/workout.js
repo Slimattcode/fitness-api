@@ -41,7 +41,10 @@ const workoutSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  mode: String,
+  mode: {
+    type: String,
+    required: true,
+  },
   equipment: {
     type: [String],
     required: true,

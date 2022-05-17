@@ -2,82 +2,84 @@
 
 const Record = require("../models/record");
 const Member = require("../models/member");
+const Workout = require("../models/workout");
+const NotFoundError = require("../errors/not-found");
+const BadRequestError = require("../errors/bad-request");
+const workout = require("../models/workout");
+
+const getAllRecords = async () => {
+  const docs = await Record.find({});
+  return docs;
+};
 
 const getRecordForWorkout = async (workoutId) => {
-  try {
-    const record = await Record.find({ workout: workoutId });
-    if (!record) {
-      throw {
-        status: 400,
-        message: `Can't find workout with the id '${workoutId}'`,
-      };
-    }
-    return record;
-  } catch (error) {
-    throw { status: 500, message: error?.message || error };
+  const docs = await Record.find({ workout: workoutId });
+  if (!docs) {
+    throw new NotFoundError(`No record for workout with the id '${workoutId}`);
   }
+  return docs;
 };
 
 const getRecordMember = async (memberId) => {
-  try {
-    const member = await Member.findById(memberId);
-    if (!member) {
-      throw {
-        status: 400,
-        message: `Can't find member with the id '${memberId}'`,
-      };
-    }
-    return member;
-  } catch (error) {
-    throw { status: 500, message: error?.message || error };
+  const docs = await Member.findById(memberId);
+  if (!docs) {
+    throw new NotFoundError(`No record for member with the id '${memberId}`);
   }
+  return docs;
 };
+
 const createNewRecord = async (insertRecord) => {
-  try {
-    let record = new Record(insertRecord);
-    await record.save();
-    return record;
-  } catch (error) {
-    throw { status: 500, message: error?.message || error };
+  const docs = await Workout.findById(insertRecord.workoutId);
+  if (!docs) {
+    throw new BadRequestError(`No workout with id '${insertRecord.workoutId}'`);
   }
+  let record = new Record(insertRecord);
+  await record.save();
+  return record;
 };
 
 const updateOneRecord = async (recordId, changes) => {
-  try {
-    const doc = await Record.findById(recordId);
-    if (!doc) {
-      throw {
-        status: 400,
-        message: `Can't find record with the id '${recordId}'`,
-      };
-    }
-    const docs = await Record.findByIdAndUpdate(recordId, changes, {
-      useFindAndModify: false,
-      returnDocument: "after",
-    });
-    return docs;
-  } catch (error) {
-    throw { status: 500, message: error?.message || error };
+  let workout;
+  let member;
+  const { workoutId, record, memberId } = changes;
+  if (!workoutId && !record && !memberId) {
+    throw new BadRequestError(
+      "Specify at least one field: `workoutId`, `record`, `memberId`"
+    );
   }
+  if (workoutId) {
+    workout = await Record.findById(workoutId);
+    if (!workout) {
+      throw new BadRequestError(`No workout with id ${workoutId}`);
+    }
+  }
+  if (memberId) {
+    member = await Record.findById(workoutId);
+    if (!member) {
+      throw new BadRequestError(`No member with id ${memberId}`);
+    }
+  }
+  const docs = await Record.findByIdAndUpdate(recordId, changes, {
+    useFindAndModify: false,
+    returnDocument: "after",
+  });
+  if (!docs) {
+    throw new NotFoundError(`No record with id ${workoutId}`);
+  }
+  return docs;
 };
 
 const deleteOneRecord = async (recordId) => {
-  try {
-    const doc = await Record.findById(recordId);
-    if (!doc) {
-      throw {
-        status: 400,
-        message: `Can't find record with the id '${recordId}`,
-      };
-    }
-    let docs = await Record.findByIdAndDelete(recordId);
-    return docs;
-  } catch (error) {
-    throw { status: 500, message: error?.message || error };
+  const doc = await Record.findById(recordId);
+  if (!doc) {
+    throw new NotFoundError(`No record with the id '${recordId}`);
   }
+  let docs = await Record.findByIdAndDelete(recordId);
+  return docs;
 };
 
 module.exports = {
+  getAllRecords,
   getRecordForWorkout,
   getRecordMember,
   createNewRecord,

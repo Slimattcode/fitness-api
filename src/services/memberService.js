@@ -4,12 +4,8 @@
 const member = require("../data/member");
 
 const getAllMembers = async () => {
-  try {
-    const allMembers = await member.getAllMembers();
-    return allMembers;
-  } catch (error) {
-    throw error;
-  }
+  const allMembers = await member.getAllMembers();
+  return allMembers;
 };
 
 const getOneMember = async (memberId) => {
@@ -23,37 +19,33 @@ const getOneMember = async (memberId) => {
 
 const createNewMember = async (newMember) => {
   let date = new Date();
+  newMember.dateOfBirth = new Intl.DateTimeFormat("nl-NL").format(
+    new Date(newMember.dateOfBirth)
+  );
   const insertMember = {
     ...newMember,
-    signedDate: date,
+    signedDate: new Intl.DateTimeFormat("nl-NL", {
+      dateStyle: "full",
+      timeStyle: "long",
+    }).format(date),
   };
-  try {
-    const createdMember = await member.createNewMember(insertMember);
-    return createdMember;
-  } catch (error) {
-    throw error;
-  }
+  const createdMember = await member.createNewMember(insertMember);
+  return createdMember;
 };
 
 const updateOneMember = async (memberId, body) => {
-  const changes = {
-    ...body,
-  };
-  try {
-    const updatedMember = await member.updateOneMember(memberId, changes);
-    return updatedMember;
-  } catch (error) {
-    throw error;
+  if (body.dateOfBirth) {
+    body.dateOfBirth = new Intl.DateTimeFormat("nl-NL").format(
+      new Date(body.dateOfBirth)
+    );
   }
+  const updatedMember = await member.updateOneMember(memberId, body);
+  return updatedMember;
 };
 
 const deleteOneMember = async (memberId) => {
-  try {
-    const deletedMember = await member.deleteOneMember(memberId);
-    return deletedMember;
-  } catch (error) {
-    throw error;
-  }
+  const deletedMember = await member.deleteOneMember(memberId);
+  return deletedMember;
 };
 
 module.exports = {

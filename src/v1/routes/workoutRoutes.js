@@ -62,20 +62,10 @@ router.get("/", cache("2 minutes"), workoutController.getAllWorkouts);
 
 router.get("/:workoutId", workoutController.getOneWorkout);
 
-router.get("/:workoutId/records", recordController.getRecordForWorkout);
-
-router.get("/:workoutId/records/:memberId", recordController.getRecordMember);
-
 router.post("/", workoutController.createNewWorkout);
-
-router.post("/:workoutId", recordController.createNewRecord);
 
 router.patch("/:workoutId", workoutController.updateOneWorkout);
 
-router.patch("/:workoutId/:recordId", recordController.updateOneRecord);
-
 router.delete("/:workoutId", workoutController.deleteOneWorkout);
-
-router.delete("/:workoutId/:recordId", recordController.deleteOneRecord);
 
 module.exports = router;

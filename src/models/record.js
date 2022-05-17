@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 
 // record schema
 const recordSchema = new mongoose.Schema({
-  workout: {
+  workoutId: {
     type: String,
     required: true,
   },
@@ -13,6 +13,7 @@ const recordSchema = new mongoose.Schema({
     required: true,
   },
   date: String,
+  updatedAt: String,
   memberId: {
     type: String,
     required: true,

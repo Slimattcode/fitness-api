@@ -9,12 +9,21 @@ const memberSchema = new mongoose.Schema({
   },
   gender: String,
   dateOfBirth: {
-    type: Date,
+    type: String,
+    required: true,
+    match: /\d{1,2}-\d{1,2}-\d{4}/,
+  },
+  email: {
+    type: String,
     required: true,
   },
-  email: String,
-  password: String,
-  signedDate: Date,
+  password: {
+    type: String,
+    required: true,
+    minlength: 8,
+    max: 50,
+  },
+  signedDate: String,
 });
 
 module.exports = mongoose.model("Member", memberSchema);

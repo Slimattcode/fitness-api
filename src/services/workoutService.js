@@ -44,18 +44,12 @@ const updateOneWorkout = async (workoutId, body) => {
     }).format(date),
   };
   const updatedWorkout = await workout.updateOneWorkout(workoutId, changes);
-  if (!updatedWorkout) {
-  }
   return updatedWorkout;
 };
 
 const deleteOneWorkout = async (workoutId) => {
-  try {
-    const deletedWorkout = await workout.deleteOneWorkout(workoutId);
-    return deletedWorkout;
-  } catch (error) {
-    throw error;
-  }
+  const deletedWorkout = await workout.deleteOneWorkout(workoutId);
+  return deletedWorkout;
 };
 
 module.exports = {
