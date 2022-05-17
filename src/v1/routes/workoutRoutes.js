@@ -15,6 +15,7 @@ const cache = apicache.middleware;
  *  get:
  *      tags:
  *          - workouts
+ *      summary: Get all workouts
  *      parameters:
  *          - in: query
  *            name: mode
@@ -41,19 +42,13 @@ const cache = apicache.middleware;
  *                                  type: array
  *                                  items:
  *                                      $ref: "#/components/schemas/workout"
- *          5XX:
+ *          4/5XX:
  *              description: FAILED
  *              content:
  *                  application/json:
  *                      schema:
  *                          type: object
  *                          properties:
- *                              status:
- *                                  type: string
- *                                  example: FAILED
- *                              data:
- *                                  type: object
- *                                  properties:
  *                                      error:
  *                                          type: string
  *                                          example: "Some error message"
