@@ -1,66 +1,61 @@
-"use strict"
+"use strict";
 // business logic: transforming data structures and communicating with database layer;
 
-const record = require("../database/record");
+const record = require("../data/record");
+
+const getAllRecords = async () => {
+  const allRecords = await record.getAllRecords();
+  return allRecords;
+};
 
 const getRecordForWorkout = async (workoutId) => {
-    try {
-        const records = await record.getRecordForWorkout(workoutId);
-        return records;
-    } catch (error) {
-        throw error;
-    };
+  try {
+    const records = await record.getRecordForWorkout(workoutId);
+    return records;
+  } catch (error) {
+    throw error;
+  }
 };
 
 const getRecordMember = async (memberId) => {
-    try {
-        const member = await record.getRecordMember(memberId);
-        return member;
-    } catch (error) {
-        throw error;
-    };
+  const member = await record.getRecordMember(memberId);
+  return member;
 };
 
 const createNewRecord = async (newRecord) => {
-    let date = new Date();
-    const insertRecord = {
-        ...newRecord,
-        member: "/:memberId",
-        date: new Intl.DateTimeFormat('nl-NL', { dateStyle: 'full', timeStyle: 'long' }).format(date),
-    };
-    try {
-        const createdRecord = await record.createNewRecord(insertRecord);
-        return createdRecord;
-    } catch (error) {
-        throw error;
-    };  
+  let date = new Date();
+  const insertRecord = {
+    ...newRecord,
+    member: ":workoutId/:memberId",
+    date: new Intl.DateTimeFormat("nl-NL", {
+      dateStyle: "full",
+      timeStyle: "long",
+    }).format(date),
+  };
+  const createdRecord = await record.createNewRecord(insertRecord);
+  return createdRecord;
 };
 
 const updateOneRecord = async (recordId, body) => {
-    const changes = {
-        ...body, 
-    };
-    try {
-        const updatedRecord = await record.updateOneRecord(recordId, changes);
-        return updatedRecord;
-    } catch (error) {
-        throw error;
-    };
+  let date = new Date();
+  body.updatedAt = new Intl.DateTimeFormat("nl-NL", {
+    dateStyle: "full",
+    timeStyle: "long",
+  }).format(date);
+  const updatedRecord = await record.updateOneRecord(recordId, body);
+  return updatedRecord;
 };
 
 const deleteOneRecord = async (recordId) => {
-    try {
-        const deletedRecord = await record.deleteOneRecord(recordId);
-        return deletedRecord;
-    } catch (error) {
-        throw error;
-    };
+  const deletedRecord = await record.deleteOneRecord(recordId);
+  return deletedRecord;
 };
 
 module.exports = {
-    getRecordForWorkout,
-    getRecordMember,
-    createNewRecord,
-    updateOneRecord,
-    deleteOneRecord,
+  getAllRecords,
+  getRecordForWorkout,
+  getRecordMember,
+  createNewRecord,
+  updateOneRecord,
+  deleteOneRecord,
 };
